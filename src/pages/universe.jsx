@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Droplets, BookOpen, Dumbbell, Zap, X, Plus, Rocket } from 'lucide-react';
 import fundoGalaxia from '../assets/fundogalaxia.png';
 
 const Universe = () => {
+  // Estados de controle da UI
   const [isModalOpen, setIsModalOpen] = useState(false);
   
-  // Estados para o formulário de criação
+  // Estados do formulário
   const [habitName, setHabitName] = useState('');
   const [selectedColor, setSelectedColor] = useState('cyan');
 
-  // Opções de cores disponíveis
+  // Configuração de temas/cores
   const colorOptions = {
     cyan: { gradient: 'from-cyan-300 via-cyan-500 to-blue-600' },
     purple: { gradient: 'from-fuchsia-300 via-purple-500 to-indigo-600' },
@@ -18,27 +19,35 @@ const Universe = () => {
     pink: { gradient: 'from-pink-300 via-rose-500 to-red-600' }
   };
 
-  const [habits, setHabits] = useState([
-    { 
-      id: 1, 
-      name: 'Beber Água', 
-      icon: <Droplets size={22} strokeWidth={2.5} />, 
-      gradient: colorOptions.cyan.gradient,
-      streak: 12 
-    },
-    { 
-      id: 2, 
-      name: 'Ler Livro', 
-      icon: <BookOpen size={22} strokeWidth={2.5} />, 
-      gradient: colorOptions.purple.gradient,
-      streak: 5 
-    },
-  ]);
+  // Inicialização do estado com persistência (LocalStorage)
+  const [habits, setHabits] = useState(() => {
+    const savedHabits = localStorage.getItem('my-cosmic-habits');
+    if (savedHabits) {
+      const parsed = JSON.parse(savedHabits);
+      // Reatribui os ícones React baseados no nome ou usa o padrão
+      return parsed.map(h => ({
+        ...h,
+        icon: h.name === 'Beber Água' ? <Droplets size={22} strokeWidth={2.5} /> :
+              h.name === 'Ler Livro' ? <BookOpen size={22} strokeWidth={2.5} /> :
+              <Rocket size={22} strokeWidth={2.5} /> 
+      }));
+    }
+    // Dados iniciais padrão caso não haja cache
+    return [
+      { id: 1, name: 'Beber Água', icon: <Droplets size={22} strokeWidth={2.5} />, gradient: colorOptions.cyan.gradient, streak: 0 },
+      { id: 2, name: 'Ler Livro', icon: <BookOpen size={22} strokeWidth={2.5} />, gradient: colorOptions.purple.gradient, streak: 0 },
+    ];
+  });
 
-  // Funcao para criar novo habito
+  // Efeito para salvar dados sempre que houver alteração na lista de hábitos
+  useEffect(() => {
+    const habitsToSave = habits.map(({ icon, ...rest }) => rest); // Remove componente React antes de salvar
+    localStorage.setItem('my-cosmic-habits', JSON.stringify(habitsToSave));
+  }, [habits]);
+
+  // Handler para criação de novo hábito
   const handleAddHabit = (e) => {
     e.preventDefault();
-    
     if (!habitName.trim()) return;
 
     const newHabit = {
@@ -50,13 +59,12 @@ const Universe = () => {
     };
 
     setHabits([...habits, newHabit]);
-    
     setHabitName('');
     setSelectedColor('cyan');
     setIsModalOpen(false);
   };
 
-  // Funcao Marcar como feito
+  // Handler para incrementar o streak
   const handleIncrementStreak = (id) => {
     setHabits(habits.map(habit => {
       if (habit.id === id) {
@@ -69,14 +77,14 @@ const Universe = () => {
   return (
     <div className="relative flex items-center justify-center w-full h-screen overflow-hidden bg-space-900 text-white">
       
-      {/* Fundo */}
+      {/* Background */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none"
         style={{ backgroundImage: `url(${fundoGalaxia})` }}
       ></div>
       <div className="absolute inset-0 bg-black/50 pointer-events-none"></div>
 
-      {/* Estrela Central  */}
+      {/* Estrela Central (Avatar) */}
       <div className="z-10 relative flex flex-col items-center justify-center">
         <div className="relative w-24 h-24 flex items-center justify-center">
            <div className="absolute inset-0 rounded-full bg-star blur-xl opacity-40 animate-pulse-glow"></div>
@@ -89,9 +97,9 @@ const Universe = () => {
         </div>
       </div>
 
-      {/* Sistema Solar */}
+      {/* Renderização do Sistema Solar */}
       {habits.map((habit, index) => {
-        // Logica visual: aumenta a orbita conforme o index e a velocidade baseada no streak
+        // Cálculo dinâmico da órbita e velocidade
         const orbitSize = 220 + (index * 110);
         const speed = Math.max(6, 40 - habit.streak); 
 
@@ -105,23 +113,20 @@ const Universe = () => {
               animation: `spin ${speed}s linear infinite` 
             }}
           >
-            {/* Container Interativo*/}
+            {/* Planeta Interativo */}
             <div className="absolute -top-6 left-1/2 -translate-x-1/2 pointer-events-auto group">
               <div 
                 onClick={() => handleIncrementStreak(habit.id)}
                 className="relative w-14 h-14 flex items-center justify-center transition-transform duration-200 hover:scale-110 active:scale-90 cursor-pointer"
               >
-                {/* Visual do Planeta */}
                 <div className={`absolute inset-0 rounded-full bg-gradient-to-br ${habit.gradient} shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.6)] border-t border-white/30`}></div>
                 <div className={`absolute inset-0 rounded-full blur-md opacity-40 ${habit.gradient}`}></div>
-                
-                {/* Icone */}
                 <div className="relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)] select-none">
                     {habit.icon}
                 </div>
               </div>
-
-              {/* Tooltip com Nome e Streak Atual */}
+              
+              {/* Tooltip */}
               <div className="absolute opacity-0 group-hover:opacity-100 transition-all duration-300 -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-space-900/90 backdrop-blur-md px-3 py-1.5 rounded-lg text-xs font-bold text-white border border-white/10 shadow-xl pointer-events-none z-50">
                 {habit.name} <span className="text-yellow-400 ml-1">★ {habit.streak}</span>
               </div>
@@ -130,7 +135,7 @@ const Universe = () => {
         );
       })}
 
-      {/* Botao Novo Habito */}
+      {/* Botão de Ação Flutuante (FAB) */}
       <button 
         onClick={() => setIsModalOpen(true)}
         className="absolute bottom-10 px-8 py-3 bg-white/5 backdrop-blur-xl border border-white/10 rounded-full hover:bg-white/10 hover:scale-105 transition-all text-sm font-bold tracking-wide shadow-lg group z-50"
@@ -140,19 +145,18 @@ const Universe = () => {
         </span>
       </button>
 
-      {/* Modal */}
+      {/* Modal de Criação */}
       {isModalOpen && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
           <div className="relative w-full max-w-md bg-space-900/90 border border-white/10 rounded-2xl p-6 shadow-2xl overflow-hidden">
             <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${colorOptions[selectedColor].gradient}`}></div>
-            
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-xl font-bold text-white">Criar Novo Hábito</h2>
               <button onClick={() => setIsModalOpen(false)} className="text-gray-400 hover:text-white transition-colors">
                 <X size={24} />
               </button>
             </div>
-
+            
             <form onSubmit={handleAddHabit} className="space-y-6">
               <div>
                 <label className="block text-xs font-bold text-gray-400 uppercase mb-2">Nome do Hábito</label>
@@ -165,7 +169,7 @@ const Universe = () => {
                   autoFocus
                 />
               </div>
-
+              
               <div>
                 <label className="block text-xs font-bold text-gray-400 uppercase mb-2">Escolha a Energia (Cor)</label>
                 <div className="flex gap-4 justify-center bg-black/20 p-3 rounded-xl border border-white/5">
