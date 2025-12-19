@@ -2,10 +2,25 @@
 export default {
   content: [
     "./index.html",
-    "./src/**/*.{js,jsx}",
+    "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        space: {
+          900: '#0B0D17', // O fundo escuro
+          800: '#151932',
+        },
+        star: {
+          DEFAULT: '#FACC15',
+          glow: '#EAB308',
+        }
+      },
+      animation: {
+        'spin-slow': 'spin 12s linear infinite',
+        'pulse-glow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+      }
+    },
   },
   plugins: [],
 }

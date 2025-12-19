@@ -1,5 +1,27 @@
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  background-color: #0B0D17;
+  color: white;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  overflow: hidden;
+}
+
+/* Define a animação de girar globalmente */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Opcional: Animação de pulso (caso a estrela não esteja pulsando) */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: .8; transform: scale(1.05); }
+}

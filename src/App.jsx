@@ -1,7 +1,9 @@
-export default function App() {
+import Universe from './pages/universe';
+
+function App() {
   return (
-    <div>
-      Em Órbita 🌌
-    </div>
+    <Universe />
   )
 }
+
+export default App;
