@@ -1,6 +1,6 @@
 import React from 'react';
 import { Droplets, BookOpen, Dumbbell, Zap } from 'lucide-react';
-
+import fundoGalaxia from '../assets/fundogalaxia.png';
 const Universe = () => {
   // 1. Dados Fakes apenas para visualização 
   const habits = [
@@ -11,18 +11,17 @@ const Universe = () => {
   ];
 
   return (
-    // CONTAINER PRINCIPAL (Fundo do Espaço)
     <div className="relative flex items-center justify-center w-full h-screen overflow-hidden bg-space-900 text-white">
       
-      {/* 🌌 Fundo Decorativo (Brilho no centro para dar profundidade) */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-space-800/40 via-space-900 to-space-900 pointer-events-none"></div>
+      {/* 🌌 Fundo*/}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none"
+        style={{ backgroundImage: `url(${fundoGalaxia})` }}
+      ></div>
 
-      {/* ✨ Estrelinhas de fundo (Simulação simples com CSS) */}
-      <div className="absolute top-10 left-20 w-1 h-1 bg-white rounded-full opacity-50 animate-pulse"></div>
-      <div className="absolute bottom-20 right-40 w-1.5 h-1.5 bg-white rounded-full opacity-30 animate-pulse delay-700"></div>
-      <div className="absolute top-1/2 left-10 w-1 h-1 bg-white rounded-full opacity-40 animate-pulse delay-300"></div>
-
-      {/* ☀️ ESTRELA CENTRAL (Representa o Usuário/Streak Principal) */}
+      {/* Camada escura */}
+      <div className="absolute inset-0 bg-black/50 pointer-events-none"></div>
+      {/* ESTRELA CENTRAL (Representa o Usuário) */}
       <div className="z-10 relative flex flex-col items-center justify-center">
         <div className="w-24 h-24 rounded-full bg-star shadow-[0_0_60px_#FACC15] animate-pulse-glow flex items-center justify-center relative z-20">
           <span className="text-space-900 font-bold text-3xl">Eu</span>
@@ -32,7 +31,7 @@ const Universe = () => {
         </div>
       </div>
 
-      {/* 🪐 SISTEMA SOLAR (As Órbitas e Planetas) */}
+      {/*  SISTEMA SOLAR (As Órbitas e Planetas) */}
       {habits.map((habit, index) => {
         
         // Tamanho da órbita: Começa em 220px e aumenta 100px para cada hábito
