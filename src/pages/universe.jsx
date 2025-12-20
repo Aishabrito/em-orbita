@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Droplets, BookOpen, Dumbbell, Zap, X, Plus, Rocket, Settings, Trash2 } from 'lucide-react'; // <--- Adicionei Settings e Trash2
+import { Droplets, BookOpen, Dumbbell, Zap, X, Plus, Rocket, Settings, Trash2, Info } from 'lucide-react';
+import { useNavigate } from 'react-router-dom'; 
 import fundoGalaxia from '../assets/fundogalaxia.png';
 
 const Universe = () => {
-  // Estados de controle da UI
+  const navigate = useNavigate();
+  
+  // Estados
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false); 
-  // Estados do formulário
+  const [isEditMode, setIsEditMode] = useState(false);
   const [habitName, setHabitName] = useState('');
   const [selectedColor, setSelectedColor] = useState('cyan');
 
@@ -18,7 +20,7 @@ const Universe = () => {
     pink: { gradient: 'from-pink-300 via-rose-500 to-red-600' }
   };
 
-  // Inicialização 
+  // Inicialização (Carregar do LocalStorage)
   const [habits, setHabits] = useState(() => {
     const savedHabits = localStorage.getItem('my-cosmic-habits');
     if (savedHabits) {
@@ -36,12 +38,13 @@ const Universe = () => {
     ];
   });
 
-  // Salvar automático
+  // Salvar no LocalStorage
   useEffect(() => {
     const habitsToSave = habits.map(({ icon, ...rest }) => rest);
     localStorage.setItem('my-cosmic-habits', JSON.stringify(habitsToSave));
   }, [habits]);
 
+  // Criar Hábito
   const handleAddHabit = (e) => {
     e.preventDefault();
     if (!habitName.trim()) return;
@@ -60,6 +63,7 @@ const Universe = () => {
     setIsModalOpen(false);
   };
 
+  // Incrementar Streak
   const handleIncrementStreak = (id) => {
     setHabits(habits.map(habit => {
       if (habit.id === id) {
@@ -69,14 +73,14 @@ const Universe = () => {
     }));
   };
 
-  // Função de Deletar 
+  // Deletar Hábito
   const handleDeleteHabit = (id) => {
     if (window.confirm("Tem certeza que deseja destruir este hábito?")) {
       setHabits(habits.filter(h => h.id !== id));
     }
   };
 
-  // Controla o clique no planeta dependendo do modo
+  // Gerenciar clique no planeta
   const handlePlanetClick = (id) => {
     if (isEditMode) {
       handleDeleteHabit(id);
@@ -88,14 +92,14 @@ const Universe = () => {
   return (
     <div className="relative flex items-center justify-center w-full h-screen overflow-hidden bg-space-900 text-white">
       
-      {/* Background */}
+      {/* Fundo */}
       <div 
         className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none"
         style={{ backgroundImage: `url(${fundoGalaxia})` }}
       ></div>
       <div className="absolute inset-0 bg-black/50 pointer-events-none"></div>
 
-      {/* Botão de Modo Edição  */}
+      {/* Botão Modo Edição */}
       <button 
         onClick={() => setIsEditMode(!isEditMode)}
         className={`absolute top-6 right-6 z-50 p-3 rounded-full transition-all duration-300 border backdrop-blur-md
@@ -108,7 +112,6 @@ const Universe = () => {
         {isEditMode ? <X size={24} /> : <Settings size={24} />}
       </button>
 
-      {/* Aviso de Modo Edição */}
       {isEditMode && (
         <div className="absolute top-20 right-6 text-red-400 text-xs font-bold uppercase tracking-widest animate-pulse z-50">
           Modo de Destruição Ativo
@@ -134,7 +137,7 @@ const Universe = () => {
         </div>
       </div>
 
-      {/* Renderização do Sistema Solar */}
+      {/* Sistema Solar (Planetas) */}
       {habits.map((habit, index) => {
         const orbitSize = 220 + (index * 110);
         const speed = Math.max(6, 40 - habit.streak); 
@@ -147,11 +150,10 @@ const Universe = () => {
               width: `${orbitSize}px`,
               height: `${orbitSize}px`,
               animation: `spin ${speed}s linear infinite`,
-              animationPlayState: isEditMode ? 'paused' : 'running', // Pausa a órbita no modo edição
+              animationPlayState: isEditMode ? 'paused' : 'running',
               borderColor: isEditMode ? 'rgba(239, 68, 68, 0.2)' : 'rgba(255, 255, 255, 0.05)'
             }}
           >
-            {/* Planeta Interativo */}
             <div className="absolute -top-6 left-1/2 -translate-x-1/2 pointer-events-auto group">
               <div 
                 onClick={() => handlePlanetClick(habit.id)}
@@ -159,27 +161,36 @@ const Universe = () => {
                   ${isEditMode ? 'cursor-not-allowed hover:scale-90' : 'cursor-pointer hover:scale-110 active:scale-90'}
                 `}
               >
-                {/* Visual do Planeta */}
                 <div className={`absolute inset-0 rounded-full transition-all duration-300
                   ${isEditMode 
-                    ? 'bg-gray-700 border-2 border-red-500' // Visual de "alvo" para deletar
+                    ? 'bg-gray-700 border-2 border-red-500' 
                     : `bg-gradient-to-br ${habit.gradient} shadow-[inset_-4px_-4px_8px_rgba(0,0,0,0.6)] border-t border-white/30`
                   }
                 `}></div>
 
-                {/* Brilho */}
                 {!isEditMode && <div className={`absolute inset-0 rounded-full blur-md opacity-40 ${habit.gradient}`}></div>}
                 
-                {/* Ícone (Muda para lixeira no modo edição) */}
                 <div className="relative z-10 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.5)] select-none">
                     {isEditMode ? <Trash2 size={20} className="text-red-500" /> : habit.icon}
                 </div>
               </div>
               
-              {/* Tooltip */}
+              {/* Tooltip + Botão Detalhes */}
               {!isEditMode && (
-                <div className="absolute opacity-0 group-hover:opacity-100 transition-all duration-300 -top-12 left-1/2 -translate-x-1/2 whitespace-nowrap bg-space-900/90 backdrop-blur-md px-3 py-1.5 rounded-lg text-xs font-bold text-white border border-white/10 shadow-xl pointer-events-none z-50">
-                  {habit.name} <span className="text-yellow-400 ml-1">★ {habit.streak}</span>
+                <div className="absolute opacity-0 group-hover:opacity-100 transition-all duration-300 -top-14 left-1/2 -translate-x-1/2 whitespace-nowrap bg-space-900/90 backdrop-blur-md px-4 py-2 rounded-xl text-xs font-bold text-white border border-white/10 shadow-xl pointer-events-auto z-50 flex flex-col items-center gap-2">
+                  <span className="flex items-center gap-2">
+                     {habit.name} <span className="text-yellow-400">★ {habit.streak}</span>
+                  </span>
+                  
+                  <button 
+                    onClick={(e) => {
+                       e.stopPropagation();
+                       navigate(`/detalhes/${habit.id}`);
+                    }}
+                    className="bg-white/10 hover:bg-white/20 px-3 py-1 rounded-md text-[10px] uppercase tracking-wider flex items-center gap-1 transition-colors"
+                  >
+                    <Info size={10} /> Detalhes
+                  </button>
                 </div>
               )}
             </div>
@@ -187,7 +198,7 @@ const Universe = () => {
         );
       })}
 
-      {/* Botão Novo Hábito  */}
+      {/* Botão Novo Hábito */}
       {!isEditMode && (
         <button 
           onClick={() => setIsModalOpen(true)}
@@ -199,7 +210,7 @@ const Universe = () => {
         </button>
       )}
 
-      {/* ... (Modal ) ... */}
+      {/* Modal Criar Hábito */}
       {isModalOpen && (
         <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-fadeIn">
           <div className="relative w-full max-w-md bg-space-900/90 border border-white/10 rounded-2xl p-6 shadow-2xl overflow-hidden">
