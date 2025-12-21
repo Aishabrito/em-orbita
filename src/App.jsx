@@ -1,18 +1,20 @@
 import React from 'react';
-// 👇 A CORREÇÃO ESTÁ NESTA LINHA: Adicionamos o 'Route'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import Universe from './pages/universe';
-import HabitDetails from './pages/habitdetails';
+// Importando seus arquivos reais da pasta pages
+// (Mantendo letras minúsculas no import para bater com seus arquivos)
+import Universe from './pages/universe'; 
+import HabitDetails from './pages/habitDetails';
 
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<Universe />} />
+        
         <Route path="/detalhes/:id" element={<HabitDetails />} />
       </Routes>
-    </Router>
+    </BrowserRouter>
   );
 }
 

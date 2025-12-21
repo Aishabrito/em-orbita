@@ -1,29 +1,48 @@
-import React, { useState } from 'react';
+import React, { useMemo } from 'react'; // Adicionado useMemo para performance
 import { ArrowLeft, Calendar, Trophy, Flame, Target } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import fundoGalaxia from '../assets/fundogalaxia.png';
+import { useCosmicHabits } from '../hooks/useCosmicHabits'; // Importe seu hook
 
 const HabitDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  
+  //  Puxaos dados diretamente do Hook 
+  const { habits } = useCosmicHabits();
 
- 
-  const [habit] = useState(() => {
-    const savedHabits = localStorage.getItem('my-cosmic-habits');
-    if (savedHabits) {
-      const parsedHabits = JSON.parse(savedHabits);
-      return parsedHabits.find(h => h.id.toString() === id) || null;
-    }
-    return null;
-  });
+  // Encontramos o hábito instantaneamente 
+  const habit = habits.find(h => h.id.toString() === id);
 
+  // Helper de data
+  const formatDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // Lógica do Calendário 
+  const daysArray = useMemo(() => {
+    if (!habit) return [];
+    
+    return Array.from({ length: 30 }, (_, i) => {
+      const d = new Date();
+      d.setDate(d.getDate() - (29 - i)); 
+      const dateString = formatDate(d);
+      
+      // Verifica no histórico se existe
+      const isDone = habit.history?.includes(dateString);
+      
+      return { date: dateString, isDone };
+    });
+  }, [habit]);
+
+  // Se não encontrar, mostra tela de erro
   if (!habit) {
     return (
-      <div className="min-h-screen bg-space-900 flex flex-col items-center justify-center text-white relative">
-         <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat pointer-events-none opacity-40"
-          style={{ backgroundImage: `url(${fundoGalaxia})` }}
-        ></div>
+      <div className="min-h-screen bg-[#0B0B15] flex flex-col items-center justify-center text-white relative">
+         <div className="absolute inset-0 bg-cover bg-center opacity-40" style={{ backgroundImage: `url(${fundoGalaxia})` }}></div>
         <h2 className="text-xl font-bold mb-4 z-10">Hábito não encontrado no radar! 🛸</h2>
         <button 
           onClick={() => navigate('/')}
@@ -35,10 +54,8 @@ const HabitDetails = () => {
     );
   }
 
-  const daysArray = Array.from({ length: 30 }, (_, i) => i < habit.streak);
-
   return (
-    <div className="min-h-screen bg-space-900 text-white relative overflow-hidden flex flex-col items-center p-6">
+    <div className="min-h-screen bg-[#0B0B15] text-white relative overflow-hidden flex flex-col items-center p-6">
       
       {/* Fundo */}
       <div 
@@ -50,57 +67,65 @@ const HabitDetails = () => {
       <div className="z-10 w-full max-w-md flex items-center justify-between mb-8 pt-4">
         <button 
           onClick={() => navigate('/')} 
-          className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors bg-white/5 px-4 py-2 rounded-full border border-white/10"
+          className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors bg-white/5 px-4 py-2 rounded-full border border-white/10 hover:bg-white/10 backdrop-blur-sm"
         >
           <ArrowLeft size={18} /> Voltar
         </button>
-        <div className={`px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-white/20 bg-gradient-to-r ${habit.gradient} bg-opacity-20`}>
+        <div className={`px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest border border-white/20 bg-gradient-to-r ${habit.gradient} bg-opacity-20 shadow-[0_0_15px_rgba(255,255,255,0.1)]`}>
           Em Órbita
         </div>
       </div>
 
       {/* Card Principal */}
-      <div className="z-10 w-full max-w-md bg-space-900/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
-        
-        {/* Brilho de fundo */}
+      <div className="z-10 w-full max-w-md bg-[#161625]/80 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+      
         <div className={`absolute top-0 right-0 w-64 h-64 bg-gradient-to-br ${habit.gradient} blur-[100px] opacity-20 pointer-events-none rounded-full -translate-y-1/2 translate-x-1/2`}></div>
 
-        <h1 className="text-3xl font-bold mb-2">{habit.name}</h1>
-        <p className="text-gray-400 text-sm mb-8 flex items-center gap-2">
-          <Target size={16} /> Foco Principal
-        </p>
+        <div className="relative">
+            <h1 className="text-3xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-400">
+                {habit.name}
+            </h1>
+            <p className="text-gray-400 text-sm mb-8 flex items-center gap-2">
+                <Target size={16} className="text-purple-400" /> Foco Principal
+            </p>
+        </div>
 
         {/* Grid de Estatísticas */}
         <div className="grid grid-cols-2 gap-4 mb-8">
-          <div className="bg-black/40 p-5 rounded-2xl border border-white/5 flex flex-col items-center justify-center">
+          <div className="bg-black/20 p-5 rounded-2xl border border-white/5 flex flex-col items-center justify-center">
             <Flame className="text-orange-400 mb-2" size={24} />
             <span className="text-3xl font-bold text-white">{habit.streak}</span>
             <span className="text-xs text-gray-400 uppercase tracking-wide mt-1">Streak Atual</span>
           </div>
-          <div className="bg-black/40 p-5 rounded-2xl border border-white/5 flex flex-col items-center justify-center">
+          <div className="bg-black/20 p-5 rounded-2xl border border-white/5 flex flex-col items-center justify-center">
             <Trophy className="text-yellow-400 mb-2" size={24} />
-            <span className="text-3xl font-bold text-white">{habit.streak + 2}</span> 
-            <span className="text-xs text-gray-400 uppercase tracking-wide mt-1">Recorde</span>
+            <span className="text-3xl font-bold text-white">{habit.history?.length || 0}</span> 
+            <span className="text-xs text-gray-400 uppercase tracking-wide mt-1">Total Dias</span>
           </div>
         </div>
 
-        {/* Calendário Visual */}
+        {/* Calendário Visual  */}
         <div className="mb-6">
           <h3 className="text-sm font-bold text-gray-300 mb-4 flex items-center gap-2">
-            <Calendar size={16} /> Histórico Recente (30 Dias)
+            <Calendar size={16} /> Histórico (30 Dias)
           </h3>
           <div className="grid grid-cols-6 gap-2">
-            {daysArray.map((done, index) => (
+            {daysArray.map((dayInfo) => (
               <div 
-                key={index}
+                key={dayInfo.date}
+                title={dayInfo.date}
                 className={`
-                  aspect-square rounded-md transition-all duration-500
-                  ${done 
-                    ? `bg-gradient-to-br ${habit.gradient} shadow-[0_0_10px_rgba(255,255,255,0.3)] scale-100` 
-                    : 'bg-white/5 scale-90 opacity-50'
+                  aspect-square rounded-md transition-all duration-500 relative group cursor-default
+                  ${dayInfo.isDone 
+                    ? `bg-gradient-to-br ${habit.gradient} shadow-[0_0_10px_rgba(255,255,255,0.3)] scale-100 border border-white/20` 
+                    : 'bg-white/5 scale-90 opacity-40 hover:opacity-60'
                   }
                 `}
-              ></div>
+              >
+                  {!dayInfo.isDone && (
+                    <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 rounded-md transition-opacity" />
+                  )}
+              </div>
             ))}
           </div>
         </div>
