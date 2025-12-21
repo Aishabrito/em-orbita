@@ -29,7 +29,7 @@ export const useCosmicHabits = () => {
 
   useEffect(() => {
     // Salva sem o ícone
-    const toSave = habits.map(({ icon, ...rest }) => rest);
+    const toSave = habits.map(({ icon: _unused, ...rest }) => rest);
     localStorage.setItem('my-cosmic-habits', JSON.stringify(toSave));
   }, [habits]);
 
@@ -52,7 +52,7 @@ export const useCosmicHabits = () => {
   };
 
   const incrementStreak = (id) => {
-    // 1. Pega a data de hoje no formato YYYY-MM-DD
+    //  Pega a data de hoje no formato YYYY-MM-DD
     const today = new Date().toISOString().split('T')[0];
 
     setHabits(habits.map(h => {
@@ -60,12 +60,12 @@ export const useCosmicHabits = () => {
         // Verifica se já tem histórico, se não, cria array vazio
         const currentHistory = h.history || [];
 
-        // 2. Se a data de hoje JÁ está no histórico, não faz nada (evita clique duplo)
+        //  Se a data de hoje JÁ está no histórico, não faz nada (evita clique duplo)
         if (currentHistory.includes(today)) {
           return h; 
         }
 
-        // 3. Adiciona streak e salva a data no histórico
+        //  Adiciona streak e salva a data no histórico
         return { 
           ...h, 
           streak: h.streak + 1,
