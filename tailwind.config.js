@@ -6,6 +6,11 @@ export default {
   ],
   theme: {
     extend: {
+      // ✅ Adicionando as Fontes aqui
+      fontFamily: {
+        'orbita': ['Rajdhani', 'sans-serif'], // Fonte para textos gerais
+        'titulo': ['Orbitron', 'sans-serif'], // Fonte para o logo "Em Órbita"
+      },
       colors: {
         space: {
           900: '#0B0D17', // O fundo escuro

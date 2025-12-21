@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Plus, Settings, X } from 'lucide-react';
+import { Plus, Settings, X, Rocket } from 'lucide-react'; // <-- Rocket adicionado aqui
 import fundoGalaxia from '../assets/fundogalaxia.png';
 import { useCosmicHabits } from '../hooks/useCosmicHabits';
-import Planet from '../components/Planet';
+import Planet from '../components/planet'; // (Corrigido para minúsculo para consistência)
 import ModalCriarHabito from '../components/modals/modalCriarHabito.jsx';
 import EstrelaCentral from '../components/estrelaCentral';
 
@@ -30,6 +30,16 @@ const Universe = () => {
         style={{ backgroundImage: `url(${fundoGalaxia})` }}></div>
       <div className="absolute inset-0 bg-black/40 pointer-events-none"></div>
 
+      {/* Logotipo no canto esquerdo */}
+      <div className="absolute top-6 left-6 z-50 flex items-center gap-3 pointer-events-none select-none">
+  <div className="relative">
+    <div className="absolute -inset-2 bg-blue-500/30 blur-lg rounded-full"></div>
+    <Rocket className="text-white relative z-10 drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]" size={28} strokeWidth={1.5} />
+  </div>
+        <h1 className="font-titulo text-2xl font-bold text-white tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
+    EM ÓRBITA
+  </h1>
+</div>
       {/* Botão de Edição  */}
       <button 
         onClick={() => setIsEditMode(!isEditMode)}
