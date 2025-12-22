@@ -1,78 +1,130 @@
 import { useState, useEffect } from 'react';
-import { getIcon } from '../utils/iconMap'; 
+import { getIcon } from '../utils/iconMap';
+
+// helpers simples de data
+const getToday = () => new Date().toISOString().split('T')[0];
+const daysBetween = (d1, d2) =>
+  Math.floor((new Date(d2) - new Date(d1)) / (1000 * 60 * 60 * 24));
 
 export const useCosmicHabits = () => {
-  // Inicialização segura
+  // INICIALIZAÇÃO SEGURA
   const [habits, setHabits] = useState(() => {
     try {
       const saved = localStorage.getItem('my-cosmic-habits');
-      if (saved) {
-        return JSON.parse(saved).map(h => ({
-          ...h,
-          history: h.history || [], 
-          // se nenhum icone for escolhido,usa rocket como padrao
-          icon: getIcon(h.iconKey || 'rocket') 
-        }));
-      }
-    } catch (error) {
-      console.error("Erro ao carregar hábitos:", error);
+      if (!saved) return [];
+
+      return JSON.parse(saved).map(habit => {
+        const history = habit.history || [];
+        const today = getToday();
+
+        let status = 'active';
+
+        if (history.length > 0) {
+          const lastDay = history[history.length - 1];
+          const diff = daysBetween(lastDay, today);
+
+          if (diff >= 2) {
+            status = 'lost';
+          }
+        }
+
+        return {
+          ...habit,
+          history,
+          status,
+          icon: getIcon(habit.iconKey || 'rocket'),
+          orbitOffset: habit.orbitOffset ?? Math.random() * 360
+        };
+      });
+    } catch (err) {
+      console.error('Erro ao carregar hábitos:', err);
+      return [];
     }
-    return []; 
   });
 
-  // Salvar no LocalStorage sempre que mudar
+  // 💾 SALVAR NO LOCALSTORAGE
   useEffect(() => {
-   
-    const toSave = habits.map(({ icon: _unused, ...rest }) => rest);
+    const toSave = habits.map(({ icon, ...rest }) => rest);
     localStorage.setItem('my-cosmic-habits', JSON.stringify(toSave));
   }, [habits]);
 
-  // Adicionar Hábito 
+  // ➕ ADICIONAR HÁBITO
   const addHabit = (name, gradient, iconKey) => {
     const newHabit = {
       id: Date.now(),
       name,
-      iconKey: iconKey, // Salva o ID do ícone (string)
-      icon: getIcon(iconKey), 
+      iconKey,
+      icon: getIcon(iconKey),
       gradient,
       streak: 0,
-      history: []
+      history: [],
+      status: 'active',
+
+      // 🌍 ângulo fixo da órbita
+      orbitOffset: Math.random() * 360
     };
+
     setHabits(prev => [...prev, newHabit]);
   };
 
-  // Deletar Hábito
+  // ❌ DELETAR
   const deleteHabit = (id) => {
     setHabits(prev => prev.filter(h => h.id !== id));
   };
 
-  // Marcar ou Desmarcar (Toggle)
+  // ✅ MARCAR / DESMARCAR
   const incrementStreak = (id) => {
-    const today = new Date().toISOString().split('T')[0];
+    const today = getToday();
 
-    setHabits(prev => prev.map(habit => {
-      if (habit.id === id) {
+    setHabits(prev =>
+      prev.map(habit => {
+        if (habit.id !== id) return habit;
+
         const history = habit.history || [];
-        const isDoneToday = history.includes(today);
-        
-        let newHistory;
-        let newStreak;
+        const lastDay = history[history.length - 1];
+        const isDoneToday = lastDay === today;
 
+        // DESMARCAR
         if (isDoneToday) {
-          // DESFAZER
-          newHistory = history.filter(date => date !== today);
-          newStreak = Math.max(0, habit.streak - 1); 
-        } else {
-          // FAZER
-          newHistory = [...history, today];
-          newStreak = habit.streak + 1;
+          return {
+            ...habit,
+            history: history.slice(0, -1),
+            streak: Math.max(0, habit.streak - 1),
+            status: 'active'
+          };
         }
 
-        return { ...habit, history: newHistory, streak: newStreak };
-      }
-      return habit;
-    }));
+        // MARCAR
+        let newStreak = 1;
+        let newStatus = 'active';
+
+        if (lastDay) {
+          const diff = daysBetween(lastDay, today);
+
+          if (diff === 1) {
+            newStreak = habit.streak + 1;
+          } else {
+            newStreak = 1;
+            if (habit.streak > 0) {
+              newStatus = 'restarted';
+            }
+          }
+        }
+
+        return {
+          ...habit,
+          history: [...history, today],
+          streak: newStreak,
+          status: newStatus
+        };
+      })
+    );
   };
 
-  return { habits, addHabit, deleteHabit, incrementStreak };
+  return {
+    habits,
+    addHabit,
+    deleteHabit,
+    incrementStreak
+  };
 };

@@ -23,26 +23,37 @@ const Planet = ({ habit, index, isEditMode, onInteract }) => {
 
   return (
     <>
-      {/* Injeção de Keyframes para garantir que a animação exista */}
       <style>
         {`
-          @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+         @keyframes spin {
+  from {
+    transform: rotate(var(--start-rotation));
+  }
+  to {
+    transform: rotate(calc(var(--start-rotation) + 360deg));
+  }
+}
+
           @keyframes counter-spin { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
         `}
       </style>
 
       {/* ANEL DA ÓRBITA (GIRA) */}
       <div
-        className="absolute rounded-full border border-white/5 shadow-[0_0_20px_rgba(255,255,255,0.02)] flex items-center justify-center pointer-events-none transition-all duration-500"
-        style={{
-          width: `${orbitSize}px`,
-          height: `${orbitSize}px`,
-          zIndex: 10 + index, // Planetas externos ficam atrás visualmente se sobreporem
-          animation: `spin ${speed}s linear infinite`,
-          animationPlayState: isEditMode ? 'paused' : 'running', // Para de girar ao editar ou passar o mouse (via group-hover no pai)
-        }}
-      >
-        {/* POSICIONAMENTO DO PLANETA (Sempre no topo do anel) */}
+  className="absolute rounded-full border border-white/5 flex items-center justify-center pointer-events-none transition-all duration-500"
+  style={{
+    width: orbitSize,
+    height: orbitSize,
+    zIndex: 10 + index,
+
+    '--start-rotation': `${habit.orbitOffset}deg`,
+
+    animation: `spin ${speed}s linear infinite`,
+    animationPlayState: isEditMode ? 'paused' : 'running'
+  }}
+>
+
+        {/* POSICIONAMENTO DO PLANETA ) */}
         <div 
           className="absolute -top-7 left-1/2 -translate-x-1/2 pointer-events-auto group"
           // Pausa a rotação do anel quando passa o mouse no planeta
@@ -61,7 +72,7 @@ const Planet = ({ habit, index, isEditMode, onInteract }) => {
           }}
         >
           
-          {/* CONTRA-ROTAÇÃO (Para o ícone ficar sempre em pé) */}
+          {/* CONTRA-ROTAÇÃO */}
           <div 
             className="counter-rotator transition-transform duration-200"
             style={{
