@@ -34,7 +34,7 @@ const Universe = () => {
       <div className="absolute top-6 left-6 z-50 flex items-center gap-3 pointer-events-none select-none">
   <div className="relative">
     <div className="absolute -inset-2 bg-blue-500/30 blur-lg rounded-full"></div>
-    <Rocket className="text-white relative z-10 drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]" size={28} strokeWidth={1.5} />
+    <Rocket className="text-cyan-400 relative z-10 drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]" size={28} strokeWidth={1.5} />
   </div>
         <h1 className="font-titulo text-2xl font-bold text-white tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
     EM ÓRBITA
