@@ -16,7 +16,7 @@ const Inicial = () => {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#000000_90%)] pointer-events-none"></div>
 
 
-      {/* --- BOTÕES DO TOPO */}
+      {/* BOTÕES DO TOPO */}
       <div className="absolute top-10 right-10 z-50 flex items-center gap-6">
         
         {/* Botão ENTRAR  */}
@@ -29,7 +29,7 @@ const Inicial = () => {
 
         {/* Botão CADASTRE-SE  */}
         <button 
-           onClick={() => navigate('/login')} 
+           onClick={() => navigate('/cadastro')} 
            className="group relative px-8 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 text-white shadow-[0_0_20px_rgba(34,211,238,0.4)] hover:shadow-[0_0_35px_rgba(147,51,234,0.6)] hover:scale-105 transition-all duration-300"
         >
            <span className="relative z-10 flex items-center gap-2 tracking-widest uppercase text-sm font-bold font-orbita">
