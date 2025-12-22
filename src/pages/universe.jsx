@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Plus, Settings, X, Rocket } from 'lucide-react'; // <-- Rocket adicionado aqui
+import { Plus, Settings, X, Rocket,  } from 'lucide-react'; 
 import fundoGalaxia from '../assets/fundogalaxia.png';
 import { useCosmicHabits } from '../hooks/useCosmicHabits';
-import Planet from '../components/planet'; // (Corrigido para minúsculo para consistência)
+import Planet from '../components/planet';
 import ModalCriarHabito from '../components/modals/modalCriarHabito.jsx';
 import EstrelaCentral from '../components/estrelaCentral';
 
@@ -20,7 +20,7 @@ const Universe = () => {
     else incrementStreak(id);
   };
 
-  const totalStreak = habits.reduce((acc, h) => acc + h.streak, 0);
+  const totalStreak = habits ? habits.reduce((acc, h) => acc + h.streak, 0) : 0;
 
   return (
     <div className="relative flex items-center justify-center w-full h-screen overflow-hidden bg-[#0B0B15] text-white">
@@ -32,14 +32,15 @@ const Universe = () => {
 
       {/* Logotipo no canto esquerdo */}
       <div className="absolute top-6 left-6 z-50 flex items-center gap-3 pointer-events-none select-none">
-  <div className="relative">
-    <div className="absolute -inset-2 bg-blue-500/30 blur-lg rounded-full"></div>
-    <Rocket className="text-cyan-400 relative z-10 drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]" size={28} strokeWidth={1.5} />
-  </div>
+        <div className="relative">
+          <div className="absolute -inset-2 bg-blue-500/30 blur-lg rounded-full"></div>
+          <Rocket className="text-cyan-400 relative z-10 drop-shadow-[0_0_10px_rgba(34,211,238,0.8)]" size={28} strokeWidth={1.5} />
+        </div>
         <h1 className="font-titulo text-2xl font-bold text-white tracking-widest drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">
-    EM ÓRBITA
-  </h1>
-</div>
+          EM ÓRBITA
+        </h1>
+      </div>
+
       {/* Botão de Edição  */}
       <button 
         onClick={() => setIsEditMode(!isEditMode)}
@@ -63,12 +64,27 @@ const Universe = () => {
       {/* Estrela Central (Eu) */}
       <EstrelaCentral isEditMode={isEditMode} totalStreak={totalStreak} />
 
-      {/* Renderização dos Planetas */}
-      {habits.map((habit, index) => (
+      {/*  ESTADO VAZIO (EMPTY STATE)  */}
+      {(!habits || habits.length === 0) && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center z-0 pointer-events-none select-none">
+           <div className="translate-y-32 flex flex-col items-center animate-in fade-in slide-in-from-bottom duration-1000">
+             <h2 className="font-titulo text-lg text-white/40 tracking-[0.2em] uppercase text-center mb-1">
+               Universo Vazio
+             </h2>
+             <p className="text-cyan-400/60 font-orbita text-xs tracking-wider animate-pulse">
+               Adicione um novo hábito para começar.
+             </p>
+           </div>
+        </div>
+      )}
+
+      {/*  RENDERIZAÇÃO DOS PLANETAS  */}
+      {habits && habits.length > 0 && habits.map((habit, index) => (
         <Planet 
           key={habit.id}
           habit={habit}
           index={index}
+          totalHabits={habits.length} 
           isEditMode={isEditMode}
           onInteract={handleInteraction}
         />

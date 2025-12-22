@@ -10,29 +10,31 @@ export const getIconForName = (name) => {
 };
 
 export const useCosmicHabits = () => {
+  // Inicialização segura
   const [habits, setHabits] = useState(() => {
-    const saved = localStorage.getItem('my-cosmic-habits');
-    if (saved) {
-      return JSON.parse(saved).map(h => ({
-        ...h,
-        // Garante que existe um array de histórico
-        history: h.history || [], 
-        icon: getIconForName(h.name) 
-      }));
+    try {
+      const saved = localStorage.getItem('my-cosmic-habits');
+      if (saved) {
+        return JSON.parse(saved).map(h => ({
+          ...h,
+          history: h.history || [], 
+          icon: getIconForName(h.name) // Recria o componente do ícone
+        }));
+      }
+    } catch (error) {
+      console.error("Erro ao carregar hábitos:", error);
     }
-    // Dados iniciais
-    return [
-        { id: 1, name: 'Beber Água', icon: <Droplets size={22} strokeWidth={2.5} />, gradient: 'from-cyan-300 via-cyan-500 to-blue-600', streak: 0, history: [] },
-        { id: 2, name: 'Ler Livro', icon: <BookOpen size={22} strokeWidth={2.5} />, gradient: 'from-fuchsia-300 via-purple-500 to-indigo-600', streak: 0, history: [] },
-    ];
+    // Retorna array vazio [] para permitir o "Estado Vazio" aparecer
+    return []; 
   });
 
+  // Salvar no LocalStorage sempre que mudar
   useEffect(() => {
-    // Salva sem o ícone
     const toSave = habits.map(({ icon: _unused, ...rest }) => rest);
     localStorage.setItem('my-cosmic-habits', JSON.stringify(toSave));
   }, [habits]);
 
+  // Adicionar Hábito
   const addHabit = (name, gradient) => {
     const newHabit = {
       id: Date.now(),
@@ -40,39 +42,42 @@ export const useCosmicHabits = () => {
       icon: getIconForName(name),
       gradient,
       streak: 0,
-      history: [] // Novo hábito começa com histórico vazio
+      history: []
     };
-    setHabits([...habits, newHabit]);
+    setHabits(prev => [...prev, newHabit]);
   };
 
+  // Deletar Hábito (Sem window.confirm para evitar travamentos visuais)
   const deleteHabit = (id) => {
-    if (window.confirm("Tem certeza que deseja destruir este hábito?")) {
-      setHabits(habits.filter(h => h.id !== id));
-    }
+    // Filtra e cria um novo array sem o item deletado
+    setHabits(prev => prev.filter(h => h.id !== id));
   };
 
+  // Marcar ou Desmarcar (Toggle)
   const incrementStreak = (id) => {
-    //  Pega a data de hoje no formato YYYY-MM-DD
     const today = new Date().toISOString().split('T')[0];
 
-    setHabits(habits.map(h => {
-      if (h.id === id) {
-        // Verifica se já tem histórico, se não, cria array vazio
-        const currentHistory = h.history || [];
+    setHabits(prev => prev.map(habit => {
+      if (habit.id === id) {
+        const history = habit.history || [];
+        const isDoneToday = history.includes(today);
+        
+        let newHistory;
+        let newStreak;
 
-        //  Se a data de hoje JÁ está no histórico, não faz nada (evita clique duplo)
-        if (currentHistory.includes(today)) {
-          return h; 
+        if (isDoneToday) {
+          // DESFAZER: Remove hoje da lista e diminui streak
+          newHistory = history.filter(date => date !== today);
+          newStreak = Math.max(0, habit.streak - 1); // Nunca menor que 0
+        } else {
+          // FAZER: Adiciona hoje e aumenta streak
+          newHistory = [...history, today];
+          newStreak = habit.streak + 1;
         }
 
-        //  Adiciona streak e salva a data no histórico
-        return { 
-          ...h, 
-          streak: h.streak + 1,
-          history: [...currentHistory, today] 
-        };
+        return { ...habit, history: newHistory, streak: newStreak };
       }
-      return h;
+      return habit;
     }));
   };
 
