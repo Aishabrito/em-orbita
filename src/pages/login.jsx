@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Rocket, ArrowRight, Lock, Mail } from 'lucide-react';
 import fundoGalaxia from '../assets/fundogalaxia.png';
@@ -41,6 +41,17 @@ const Login = () => {
               className="w-full bg-black/40 border border-white/10 rounded-xl py-3 pl-11 pr-4 text-white focus:border-cyan-500/50 focus:outline-none transition-all" />
           </div>
 
+          {/*  ESQUECEU A SENHA */}
+          <div className="flex justify-end">
+            <button 
+              type="button" 
+              onClick={() => navigate('/recuperar-senha')}
+              className="text-xs text-gray-400 hover:text-cyan-400 transition-colors font-light"
+            >
+              Esqueceu a senha?
+            </button>
+          </div>
+          
           <button type="submit"
             className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-bold py-3.5 rounded-xl hover:scale-[1.02] transition-all shadow-lg flex items-center justify-center gap-2 uppercase tracking-widest text-sm">
             Decolar <ArrowRight size={16} />
