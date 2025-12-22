@@ -1,13 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Droplets, BookOpen, Rocket } from 'lucide-react';
-
-// Helper para recuperar ícones
-export const getIconForName = (name) => {
-  const lower = name.toLowerCase();
-  if (lower.includes('água') || lower.includes('agua')) return <Droplets size={22} strokeWidth={2.5} />;
-  if (lower.includes('ler') || lower.includes('livro')) return <BookOpen size={22} strokeWidth={2.5} />;
-  return <Rocket size={22} strokeWidth={2.5} />;
-};
+import { getIcon } from '../utils/iconMap'; 
 
 export const useCosmicHabits = () => {
   // Inicialização segura
@@ -18,28 +10,30 @@ export const useCosmicHabits = () => {
         return JSON.parse(saved).map(h => ({
           ...h,
           history: h.history || [], 
-          icon: getIconForName(h.name) // Recria o componente do ícone
+          // se nenhum icone for escolhido,usa rocket como padrao
+          icon: getIcon(h.iconKey || 'rocket') 
         }));
       }
     } catch (error) {
       console.error("Erro ao carregar hábitos:", error);
     }
-    // Retorna array vazio [] para permitir o "Estado Vazio" aparecer
     return []; 
   });
 
   // Salvar no LocalStorage sempre que mudar
   useEffect(() => {
+   
     const toSave = habits.map(({ icon: _unused, ...rest }) => rest);
     localStorage.setItem('my-cosmic-habits', JSON.stringify(toSave));
   }, [habits]);
 
-  // Adicionar Hábito
-  const addHabit = (name, gradient) => {
+  // Adicionar Hábito 
+  const addHabit = (name, gradient, iconKey) => {
     const newHabit = {
       id: Date.now(),
       name,
-      icon: getIconForName(name),
+      iconKey: iconKey, // Salva o ID do ícone (string)
+      icon: getIcon(iconKey), 
       gradient,
       streak: 0,
       history: []
@@ -47,9 +41,8 @@ export const useCosmicHabits = () => {
     setHabits(prev => [...prev, newHabit]);
   };
 
-  // Deletar Hábito (Sem window.confirm para evitar travamentos visuais)
+  // Deletar Hábito
   const deleteHabit = (id) => {
-    // Filtra e cria um novo array sem o item deletado
     setHabits(prev => prev.filter(h => h.id !== id));
   };
 
@@ -66,11 +59,11 @@ export const useCosmicHabits = () => {
         let newStreak;
 
         if (isDoneToday) {
-          // DESFAZER: Remove hoje da lista e diminui streak
+          // DESFAZER
           newHistory = history.filter(date => date !== today);
-          newStreak = Math.max(0, habit.streak - 1); // Nunca menor que 0
+          newStreak = Math.max(0, habit.streak - 1); 
         } else {
-          // FAZER: Adiciona hoje e aumenta streak
+          // FAZER
           newHistory = [...history, today];
           newStreak = habit.streak + 1;
         }
