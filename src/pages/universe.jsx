@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useCosmicHabits } from '../hooks/useCosmicHabits';
-import Planet from '../components/planet';
+import Planet from '../components/planet.jsx';
 import ModalCriarHabito from '../components/modals/modalCriarHabito.jsx';
 import EstrelaCentral from '../components/estrelaCentral';
 import { getToday } from '../utils/date'; 
