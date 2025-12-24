@@ -37,6 +37,24 @@ Uso consciente de `useEffect` para persistência local (LocalStorage) e sincroni
 
 ---
 
+Bash
+
+git clone [https://github.com/SEU_USUARIO_GITHUB/em-orbita.git](https://github.com/SEU_USUARIO_GITHUB/em-orbita.git)
+Instale as dependências:
+
+Bash
+
+npm install
+Inicie o servidor de desenvolvimento:
+
+Bash
+
+npm run dev
+
+👩‍💻 Autora
+Desenvolvido por Aisha Brito - Desenvolvedora Front-End.
+
+Entre em contato! 
 ## 🛠️ Stack Tecnológica
 
 - **React.js (Vite):** Pela velocidade de desenvolvimento e ecossistema moderno.
@@ -71,24 +89,7 @@ src/
 | **Sistema de Vida/Morte** | Lógica de tempo (`Date.now()`) que compara a última interação. Se > 48h, altera classes CSS para *grayscale*, *opacity* e reduz a velocidade de rotação. |
 | **Persistência de Dados** | Integração com `localStorage` e tratamento de JSON para manter o progresso do usuário entre sessões. |
 | **Modo de Edição Seguro** | Toggle de estado booleano que transforma a UI inteira, alterando tooltips para alertas de perigo e mudando a função de clique. |
+
 🚀 Como Rodar Localmente
 Clone o repositório:
 
-Bash
-
-git clone [https://github.com/SEU_USUARIO_GITHUB/em-orbita.git](https://github.com/SEU_USUARIO_GITHUB/em-orbita.git)
-Instale as dependências:
-
-Bash
-
-npm install
-Inicie o servidor de desenvolvimento:
-
-Bash
-
-npm run dev
-
-👩‍💻 Autora
-Desenvolvido por Aisha Brito - Desenvolvedora Front-End.
-
-Entre em contato!
