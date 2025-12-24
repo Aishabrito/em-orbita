@@ -62,3 +62,33 @@ src/
 │   └── useCosmicHabits.jsx  # Centraliza o estado e lógica dos hábitos
 ├── pages/              # Views principais (Roteamento)
 └── utils/              # Funções puras auxiliares (Helpers de Data)
+
+## ✨ Funcionalidades Principais
+
+| Feature | Descrição Técnica |
+| :--- | :--- |
+| **Visualização Orbital** | Renderização dinâmica baseada em array de objetos. Cada planeta tem props calculadas matematicamente (velocidade, raio, cor). |
+| **Sistema de Vida/Morte** | Lógica de tempo (`Date.now()`) que compara a última interação. Se > 48h, altera classes CSS para *grayscale*, *opacity* e reduz a velocidade de rotação. |
+| **Persistência de Dados** | Integração com `localStorage` e tratamento de JSON para manter o progresso do usuário entre sessões. |
+| **Modo de Edição Seguro** | Toggle de estado booleano que transforma a UI inteira, alterando tooltips para alertas de perigo e mudando a função de clique. |
+🚀 Como Rodar Localmente
+Clone o repositório:
+
+Bash
+
+git clone [https://github.com/SEU_USUARIO_GITHUB/em-orbita.git](https://github.com/SEU_USUARIO_GITHUB/em-orbita.git)
+Instale as dependências:
+
+Bash
+
+npm install
+Inicie o servidor de desenvolvimento:
+
+Bash
+
+npm run dev
+
+👩‍💻 Autora
+Desenvolvido por Aisha Brito - Desenvolvedora Front-End.
+
+Entre em contato!
