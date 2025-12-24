@@ -73,9 +73,18 @@ src/
 | **Modo de Edição Seguro** | Toggle de estado booleano que transforma a UI inteira, alterando tooltips para alertas de perigo e mudando a função de clique. |
 
 
-## 👩‍💻 Autora
+👩‍💻 Autora
+<div align="center">
 
-### Aisha Brito 🚀
+Aisha Brito 🚀
+Desenvolvedora Front-End apaixonada por React, UX e interfaces interativas. Este projeto é parte do meu portfólio profissional.
 
-Desenvolvedora Front-End apaixonada por React, UX e interfaces interativas.
-Este projeto é parte do meu portfólio profissional.
+</div>
+<div align="left">
+  <a href="https://www.linkedin.com/in/a%C3%ADsha-brito-9567bb226/" target="_blank">
+    <img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank">
+  </a>
+  <a href="mailto:aisha.paola14@gmail.com">
+    <img src="https://img.shields.io/badge/-Gmail-%23333?style=for-the-badge&logo=gmail&logoColor=white" target="_blank">
+  </a>
+</div>

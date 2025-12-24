@@ -4,7 +4,7 @@ import Inicial from './pages/inicial';
 import Login from './pages/login';         
 import Cadastro from './pages/cadastro';    
 import Universe from './pages/universe'; 
-import HabitDetails from './pages/habitdetails';
+import HabitDetails from './pages/habitDetails';
 import RecuperarSenha from './pages/recuperarSenha';
 
 function App() {
