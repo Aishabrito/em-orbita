@@ -16,7 +16,7 @@ O **Em Órbita** não é apenas uma lista de tarefas. É um estudo de caso sobre
 
 Neste projeto, transformei dados frios (checkboxes) em um sistema planetário vivo. O objetivo técnico foi demonstrar domínio sobre **manipulação de estado complexo**, **animações CSS performáticas** e **separação de responsabilidades (Clean Code)**.
 
-### 🔗 [Acesse o Projeto Online (Deploy)](LINK_DO_SEU_VERCEL_AQUI)
+### 🔗 [Acesse o Projeto Online (Deploy)](https://em-orbita-fwbknathv-aisha-britos-projects.vercel.app/orbita)
 
 ---
 
@@ -62,29 +62,4 @@ src/
 │   └── useCosmicHabits.jsx  # Centraliza o estado e lógica dos hábitos
 ├── pages/              # Views principais (Roteamento)
 └── utils/              # Funções puras auxiliares (Helpers de Data)
-
-## ✨ Funcionalidades Principais
-
-| Feature | Descrição Técnica |
-| :--- | :--- |
-| **Visualização Orbital** | Renderização dinâmica baseada em array de objetos. Cada planeta tem props calculadas matematicamente (velocidade, raio, cor). |
-| **Sistema de Vida/Morte** | Lógica de tempo (`Date.now()`) que compara a última interação. Se > 48h, altera classes CSS para *grayscale*, *opacity* e reduz a velocidade de rotação. |
-| **Persistência de Dados** | Integração com `localStorage` e tratamento de JSON para manter o progresso do usuário entre sessões. |
-| **Modo de Edição Seguro** | Toggle de estado booleano que transforma a UI inteira, alterando tooltips para alertas de perigo e mudando a função de clique. |
-
-
-👩‍💻 Autora
-<div align="center">
-
-Aisha Brito 🚀
-Desenvolvedora Front-End apaixonada por React, UX e interfaces interativas. Este projeto é parte do meu portfólio profissional.
-
-</div>
-<div align="left">
-  <a href="https://www.linkedin.com/in/a%C3%ADsha-brito-9567bb226/" target="_blank">
-    <img src="https://img.shields.io/badge/-LinkedIn-%230077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank">
-  </a>
-  <a href="mailto:aisha.paola14@gmail.com">
-    <img src="https://img.shields.io/badge/-Gmail-%23333?style=for-the-badge&logo=gmail&logoColor=white" target="_blank">
-  </a>
-</div>
+```
