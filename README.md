@@ -6,8 +6,7 @@
 
 > **Uma experiência visual e interativa para gestão de rotina, explorando conceitos avançados de React e UX.**
 
-![Project Preview](https://via.placeholder.com/1200x600?text=INSIRA+SEU+GIF+OU+PRINT+AQUI)
-
+![Capa do Projeto](./capa-projeto.jpg)
 ---
 
 ## 🎯 Sobre o Projeto
