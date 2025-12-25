@@ -36,7 +36,20 @@ A aplicação foca na satisfação do usuário através de micro-interações re
 Uso consciente de `useEffect` para persistência local (LocalStorage) e sincronização de eventos de áudio, evitando re-renderizações desnecessárias e memory leaks.
 
 ---
+## ✨ Funcionalidades Principais
 
+* **🪐 Visualização Orbital**
+    Renderização dinâmica baseada em array de objetos. Cada planeta tem props calculadas matematicamente (velocidade, raio, cor).
+
+* **💀 Sistema de Vida/Morte**
+    Lógica de tempo (`Date.now()`) que compara a última interação. Se > 48h, altera classes CSS para *grayscale*, *opacity* e reduz a velocidade de rotação.
+
+* **💾 Persistência de Dados**
+    Integração com `localStorage` e tratamento de JSON para manter o progresso do usuário entre sessões.
+
+* **🛡️ Modo de Edição Seguro**
+    Toggle de estado booleano que transforma a UI inteira, alterando tooltips para alertas de perigo e mudando a função de clique.
+---
 ## 🛠️ Stack Tecnológica
 
 - **React.js (Vite):** Pela velocidade de desenvolvimento e ecossistema moderno.
