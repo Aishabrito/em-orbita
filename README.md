@@ -15,8 +15,8 @@ O **Em Órbita** não é apenas uma lista de tarefas. É um estudo de caso sobre
 
 Neste projeto, transformei dados frios (checkboxes) em um sistema planetário vivo. O objetivo técnico foi demonstrar domínio sobre **manipulação de estado complexo**, **animações CSS performáticas** e **separação de responsabilidades (Clean Code)**.
 
-### 🔗 [Acesse o Projeto Online (Deploy)](https://em-orbita-fwbknathv-aisha-britos-projects.vercel.app/orbita)
-
+### 🔗 Acesse o Projeto Online:
+[![Vercel Deploy](https://img.shields.io/badge/Acessar%20Deploy-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://em-orbita-fwbknathv-aisha-britos-projects.vercel.app)
 ---
 
 ## 💻 Destaques Técnicos
