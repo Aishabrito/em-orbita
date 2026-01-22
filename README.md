@@ -1,12 +1,13 @@
 # 🪐 Em Órbita - Gamified Habit Tracker
 
-![Project Status](https://img.shields.io/badge/Status-Concluído-green?style=for-the-badge)
+![Project Status](https://img.shields.io/badge/Status-Em_Desenvolvimento-yellow?style=for-the-badge)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 
 > **Uma experiência visual e interativa para gestão de rotina, explorando conceitos avançados de React e UX.**
 
 ![Capa do Projeto](src/assets/capa-projeto.jpg)
+
 ---
 
 ## 🎯 Sobre o Projeto
@@ -15,8 +16,19 @@ O **Em Órbita** não é apenas uma lista de tarefas. É um estudo de caso sobre
 
 Neste projeto, transformei dados frios (checkboxes) em um sistema planetário vivo. O objetivo técnico foi demonstrar domínio sobre **manipulação de estado complexo**, **animações CSS performáticas** e **separação de responsabilidades (Clean Code)**.
 
-### 🔗 Acesse o Projeto Online:
+### 🔗 Acesse o Projeto Online (WIP):
 [![Vercel Deploy](https://img.shields.io/badge/Acessar%20Deploy-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://em-orbita-fwbknathv-aisha-britos-projects.vercel.app)
+
+---
+
+## 🚧 Status do Projeto (Work in Progress)
+
+Este projeto está em **desenvolvimento ativo**. Como foco a construção de interfaces **Pixel Perfect** e performance, algumas funcionalidades estão sendo refinadas iterativamente:
+- [x] Arquitetura base e Custom Hooks.
+- [x] Lógica de Órbitas e Animações CSS.
+- [ ] Refatoração da responsividade mobile.
+- [ ] Implementação de Dashboard de histórico.
+
 ---
 
 ## 💻 Destaques Técnicos
@@ -35,6 +47,7 @@ A aplicação foca na satisfação do usuário através de micro-interações re
 Uso consciente de `useEffect` para persistência local (LocalStorage) e sincronização de eventos de áudio, evitando re-renderizações desnecessárias e memory leaks.
 
 ---
+
 ## ✨ Funcionalidades Principais
 
 * **🪐 Visualização Orbital**
@@ -48,7 +61,9 @@ Uso consciente de `useEffect` para persistência local (LocalStorage) e sincroni
 
 * **🛡️ Modo de Edição Seguro**
     Toggle de estado booleano que transforma a UI inteira, alterando tooltips para alertas de perigo e mudando a função de clique.
+
 ---
+
 ## 🛠️ Stack Tecnológica
 
 - **React.js (Vite):** Pela velocidade de desenvolvimento e ecossistema moderno.
@@ -74,4 +89,3 @@ src/
 │   └── useCosmicHabits.jsx  # Centraliza o estado e lógica dos hábitos
 ├── pages/              # Views principais (Roteamento)
 └── utils/              # Funções puras auxiliares (Helpers de Data)
-```
