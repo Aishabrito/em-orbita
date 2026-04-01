@@ -6,8 +6,7 @@ import {
   addDoc,
   updateDoc,
   deleteDoc,
-  query,
-  
+  query
 } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useAuth } from './useAuth';
@@ -20,9 +19,31 @@ const daysBetween = (d1, d2) =>
 
 const calcStatus = (history) => {
   if (!history || history.length === 0) return 'active';
-  const lastDay = history[history.length - 1];
+  const lastDay = [...history].sort()[history.length - 1];
   const diff = daysBetween(lastDay, getToday());
   return diff >= 2 ? 'lost' : 'active';
+};
+
+// Calcula streak real sempre do histórico
+const calcStreak = (history) => {
+  if (!history || history.length === 0) return 0;
+  const sorted = [...history].sort().reverse();
+  let streak = 0;
+  let expected = getToday();
+  for (const day of sorted) {
+    const diff = daysBetween(day, expected);
+    if (diff === 0) {
+      streak++;
+      const d = new Date(expected);
+      d.setDate(d.getDate() - 1);
+      expected = d.toISOString().split('T')[0];
+    } else if (diff < 0) {
+      continue;
+    } else {
+      break;
+    }
+  }
+  return streak;
 };
 
 export const useCosmicHabits = () => {
@@ -30,13 +51,13 @@ export const useCosmicHabits = () => {
   const [habits, setHabits] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // 🔥 ESCUTA EM TEMPO REAL OS HÁBITOS DO USUÁRIO
   useEffect(() => {
     if (!user) return;
 
-    
     const habitsRef = collection(db, 'users', user.uid, 'habits');
-const q = query(habitsRef);    const unsubscribe = onSnapshot(
+    const q = query(habitsRef);
+
+    const unsubscribe = onSnapshot(
       q,
       (snapshot) => {
         const loaded = snapshot.docs.map(docSnap => {
@@ -46,6 +67,7 @@ const q = query(habitsRef);    const unsubscribe = onSnapshot(
             ...data,
             id: docSnap.id,
             history,
+            streak: calcStreak(history),
             status: calcStatus(history),
             icon: getIcon(data.iconKey || 'rocket'),
             orbitOffset: data.orbitOffset ?? Math.random() * 360
@@ -61,7 +83,6 @@ const q = query(habitsRef);    const unsubscribe = onSnapshot(
       }
     );
 
-    // Timeout de segurança — se após 5s ainda carregar, libera a tela
     const timeout = setTimeout(() => setLoading(false), 5000);
 
     return () => {
@@ -70,21 +91,26 @@ const q = query(habitsRef);    const unsubscribe = onSnapshot(
     };
   }, [user]);
 
-  // ➕ ADICIONAR HÁBITO
+  // ➕ ADICIONAR
   const addHabit = async (name, gradient, iconKey) => {
     if (!user) return;
-
     const habitsRef = collection(db, 'users', user.uid, 'habits');
     await addDoc(habitsRef, {
       name,
       iconKey,
       gradient,
-      streak: 0,
       history: [],
       status: 'active',
       orbitOffset: Math.random() * 360,
       createdAt: Date.now()
     });
+  };
+
+  // ✏️ EDITAR
+  const editHabit = async (id, name, gradient, iconKey) => {
+    if (!user) return;
+    const habitRef = doc(db, 'users', user.uid, 'habits', id);
+    await updateDoc(habitRef, { name, gradient, iconKey });
   };
 
   // ❌ DELETAR
@@ -98,51 +124,31 @@ const q = query(habitsRef);    const unsubscribe = onSnapshot(
   const incrementStreak = async (id) => {
     if (!user) return;
     const today = getToday();
-
     const habit = habits.find(h => h.id === id);
     if (!habit) return;
 
     const history = habit.history || [];
-    const lastDay = history[history.length - 1];
-    const isDoneToday = lastDay === today;
-
+    const isDoneToday = history.includes(today);
     const habitRef = doc(db, 'users', user.uid, 'habits', id);
 
-    // DESMARCAR
     if (isDoneToday) {
       await updateDoc(habitRef, {
-        history: history.slice(0, -1),
-        streak: Math.max(0, habit.streak - 1),
+        history: history.filter(d => d !== today),
         status: 'active'
       });
-      return;
+    } else {
+      await updateDoc(habitRef, {
+        history: [...history, today],
+        status: 'active'
+      });
     }
-
-    // MARCAR
-    let newStreak = 1;
-    let newStatus = 'active';
-
-    if (lastDay) {
-      const diff = daysBetween(lastDay, today);
-      if (diff === 1) {
-        newStreak = habit.streak + 1;
-      } else {
-        newStreak = 1;
-        if (habit.streak > 0) newStatus = 'restarted';
-      }
-    }
-
-    await updateDoc(habitRef, {
-      history: [...history, today],
-      streak: newStreak,
-      status: newStatus
-    });
   };
 
   return {
     habits,
     loading,
     addHabit,
+    editHabit,
     deleteHabit,
     incrementStreak
   };

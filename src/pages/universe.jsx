@@ -59,8 +59,7 @@ const Universe = () => {
     incrementStreak(id);
   };
 
-  const totalStreak = habits ? habits.reduce((acc, h) => acc + h.streak, 0) : 0;
-  const temHabitos = habits && habits.length > 0;
+const totalStreak = habits ? habits.reduce((acc, h) => acc + (h.streak || 0), 0) : 0;  const temHabitos = habits && habits.length > 0;
 
   // Loading enquanto busca dados do Firestore
   if (loading) {
