@@ -20,6 +20,7 @@ import { LogOut } from 'lucide-react';
 
 const Universe = () => {
   const { habits, loading, addHabit, deleteHabit, incrementStreak } = useCosmicHabits();
+  
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -85,7 +86,7 @@ const Universe = () => {
       <button
         onClick={handleLogout}
         title="Sair da conta"
-        className="absolute top-5 right-5 z-50 flex items-center gap-2 text-gray-400 hover:text-red-400 transition-colors bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30 px-4 py-2 rounded-full backdrop-blur-md text-xs uppercase tracking-widest font-bold"
+        className="absolute top-6 right-20 z-50 flex items-center gap-2 text-gray-400 hover:text-red-400 transition-colors bg-white/5 hover:bg-red-500/10 border border-white/10 hover:border-red-500/30 px-4 py-2.5 rounded-full backdrop-blur-md text-xs uppercase tracking-widest font-bold"
       >
         <LogOut size={14} />
         Sair

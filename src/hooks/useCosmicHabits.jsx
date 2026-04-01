@@ -7,7 +7,7 @@ import {
   updateDoc,
   deleteDoc,
   query,
-  orderBy
+  
 } from 'firebase/firestore';
 import { db } from '../firebase';
 import { useAuth } from './useAuth';
@@ -28,33 +28,46 @@ const calcStatus = (history) => {
 export const useCosmicHabits = () => {
   const { user } = useAuth();
   const [habits, setHabits] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   // 🔥 ESCUTA EM TEMPO REAL OS HÁBITOS DO USUÁRIO
   useEffect(() => {
     if (!user) return;
 
+    
     const habitsRef = collection(db, 'users', user.uid, 'habits');
-    const q = query(habitsRef, orderBy('createdAt', 'asc'));
+const q = query(habitsRef);    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const loaded = snapshot.docs.map(docSnap => {
+          const data = docSnap.data();
+          const history = data.history || [];
+          return {
+            ...data,
+            id: docSnap.id,
+            history,
+            status: calcStatus(history),
+            icon: getIcon(data.iconKey || 'rocket'),
+            orbitOffset: data.orbitOffset ?? Math.random() * 360
+          };
+        });
+        setHabits(loaded);
+        setLoading(false);
+      },
+      (error) => {
+        console.error('Firestore error:', error);
+        setHabits([]);
+        setLoading(false);
+      }
+    );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const loaded = snapshot.docs.map(docSnap => {
-        const data = docSnap.data();
-        const history = data.history || [];
-        return {
-          ...data,
-          id: docSnap.id,
-          history,
-          status: calcStatus(history),
-          icon: getIcon(data.iconKey || 'rocket'),
-          orbitOffset: data.orbitOffset ?? Math.random() * 360
-        };
-      });
-      setHabits(loaded);
-      setLoading(false);
-    });
+    // Timeout de segurança — se após 5s ainda carregar, libera a tela
+    const timeout = setTimeout(() => setLoading(false), 5000);
 
-    return unsubscribe;
+    return () => {
+      unsubscribe();
+      clearTimeout(timeout);
+    };
   }, [user]);
 
   // ➕ ADICIONAR HÁBITO
