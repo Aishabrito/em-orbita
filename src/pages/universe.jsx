@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useCosmicHabits } from '../hooks/useCosmicHabits';
-import { useAuth } from '../hooks/useAuth';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
 import { useNavigate } from 'react-router-dom';
@@ -21,7 +20,6 @@ import { LogOut } from 'lucide-react';
 
 const Universe = () => {
   const { habits, loading, addHabit, deleteHabit, incrementStreak } = useCosmicHabits();
-  const { user } = useAuth();
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);

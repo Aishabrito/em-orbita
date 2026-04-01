@@ -32,11 +32,7 @@ export const useCosmicHabits = () => {
 
   // 🔥 ESCUTA EM TEMPO REAL OS HÁBITOS DO USUÁRIO
   useEffect(() => {
-    if (!user) {
-      setHabits([]);
-      setLoading(false);
-      return;
-    }
+    if (!user) return;
 
     const habitsRef = collection(db, 'users', user.uid, 'habits');
     const q = query(habitsRef, orderBy('createdAt', 'asc'));
