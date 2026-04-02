@@ -35,10 +35,43 @@ body {
   }
 }
 
+
 .card {
   padding: 2em;
 }
 
+
 .read-the-docs {
   color: #888;
+}
+@layer utilities {
+  /* Estilização da Scrollbar para o Modal */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent; /* Remove o fundo branco */
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1); /* Deixa um cinza bem clarinho e discreto */
+    border-radius: 20px;
+    border: 2px solid transparent; /* Cria um respiro */
+    background-clip: content-box;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2); /* Brilha levemente ao passar o mouse */
+  }
+
+  /* Esconde a barra totalmente se preferir (opcional) */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
 }
