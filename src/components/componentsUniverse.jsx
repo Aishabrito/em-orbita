@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Rocket, Settings, X, Plus } from 'lucide-react';
+import { Rocket, Settings, X, Plus, Star } from 'lucide-react';
 import fundoGalaxia from '../assets/fundogalaxia.png';
 
 // ─── Geração determinística ───────────────────────────────────────────────────
@@ -209,15 +209,27 @@ export const ControlesUniverso = ({ isEditMode, toggleEdit }) => (
 );
 
 // ─── Estado Vazio ─────────────────────────────────────────────────────────────
-export const EstadoVazio = () => (
-  <div className="absolute inset-0 flex flex-col items-center justify-center z-0 pointer-events-none select-none">
-    <div className="translate-y-36 flex flex-col items-center gap-2 animate-in fade-in slide-in-from-bottom duration-1000">
-      <p className="font-titulo text-base text-white/30 tracking-[0.25em] uppercase">
+export const EstadoVazio = ({ onAddHabit }) => (
+  <div className="absolute inset-0 flex flex-col items-center justify-center z-20 select-none">
+    <div className="translate-y-36 flex flex-col items-center gap-5 animate-in fade-in slide-in-from-bottom duration-1000">
+      <p className="font-titulo text-2xl text-white/30 tracking-[0.3em] uppercase">
         Universo Vazio
       </p>
-      <p className="text-cyan-400/50 font-orbita text-xs tracking-wider animate-pulse">
-        Adicione um hábito para começar.
+      <p className="text-white/20 font-orbita text-sm tracking-wider text-center">
+        Sua galáxia está esperando pelo primeiro planeta.
       </p>
+      <button
+        onClick={onAddHabit}
+        className="mt-2 group flex items-center gap-3 px-8 py-4 rounded-full border border-cyan-400/30 bg-cyan-500/10 hover:bg-cyan-500/20 hover:border-cyan-400/60 backdrop-blur-xl transition-all duration-300 hover:scale-105 shadow-[0_0_30px_rgba(34,211,238,0.1)]"
+      >
+        <Plus
+          size={18}
+          className="text-cyan-400 group-hover:rotate-90 transition-transform duration-300"
+        />
+        <span className="bg-gradient-to-r from-cyan-300 to-purple-400 bg-clip-text text-transparent font-bold text-sm tracking-widest uppercase font-titulo">
+          Criar Primeiro Hábito
+        </span>
+      </button>
     </div>
   </div>
 );
@@ -237,3 +249,41 @@ export const BotaoNovoHabito = ({ onClick }) => (
     </span>
   </button>
 );
+
+// ─── Painel de Progresso Diário ───────────────────────────────────────────────
+export const PainelDiario = ({ habits }) => {
+  const today = new Date().toISOString().split('T')[0];
+  const total = habits.length;
+  const completed = habits.filter(h => h.history?.includes(today)).length;
+  const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+  const maxStreak = habits.reduce((max, h) => Math.max(max, h.streak || 0), 0);
+
+  return (
+    <div className="absolute bottom-10 left-6 z-50 flex flex-col gap-2 backdrop-blur-md bg-white/5 border border-white/10 rounded-2xl px-4 py-3 min-w-[160px] shadow-lg">
+      <div className="flex items-center justify-between gap-4">
+        <span className="text-[10px] uppercase tracking-widest text-white/40 font-bold">Hoje</span>
+        <span className="text-[10px] font-bold text-cyan-300">{completed}/{total}</span>
+      </div>
+
+      {/* Barra de progresso */}
+      <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+        <div
+          className="h-full rounded-full transition-all duration-700"
+          style={{
+            width: `${pct}%`,
+            background: pct === 100
+              ? 'linear-gradient(to right, #4ade80, #22d3ee)'
+              : 'linear-gradient(to right, #22d3ee, #a855f7)',
+          }}
+        />
+      </div>
+
+      <div className="flex items-center gap-1.5 mt-0.5">
+        <Star size={10} className="text-yellow-400" fill="currentColor" />
+        <span className="text-[10px] text-yellow-300/70 font-bold tracking-wider">
+          Melhor streak: {maxStreak}
+        </span>
+      </div>
+    </div>
+  );
+};

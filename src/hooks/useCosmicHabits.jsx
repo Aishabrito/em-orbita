@@ -52,7 +52,13 @@ export const useCosmicHabits = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) {
+      setLoading(false);
+      setHabits([]);
+      return;
+    }
+
+    setLoading(true);
 
     const habitsRef = collection(db, 'users', user.uid, 'habits');
     const q = query(habitsRef);

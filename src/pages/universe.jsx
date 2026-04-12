@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCosmicHabits } from '../hooks/useCosmicHabits';
 import { signOut } from 'firebase/auth';
 import { auth } from '../firebase';
@@ -12,7 +12,8 @@ import {
   CabecalhoUniverso,
   ControlesUniverso,
   EstadoVazio,
-  BotaoNovoHabito
+  BotaoNovoHabito,
+  PainelDiario
 } from '../components/componentsUniverse';
 import successSfx from '../assets/success.mp3';
 import clickSfx from '../assets/click.mp3';
@@ -24,6 +25,7 @@ const Universe = () => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
+  const [systemScale, setSystemScale] = useState(1);
 
   // audios
   const playSuccess = new Audio(successSfx);
@@ -59,7 +61,25 @@ const Universe = () => {
     incrementStreak(id);
   };
 
-const totalStreak = habits ? habits.reduce((acc, h) => acc + (h.streak || 0), 0) : 0;  const temHabitos = habits && habits.length > 0;
+const maxStreak = habits ? habits.reduce((max, h) => Math.max(max, h.streak || 0), 0) : 0;  const temHabitos = habits && habits.length > 0;
+
+  // Escala proporcional no mobile — garante que as órbitas cabem na tela
+  useEffect(() => {
+    const updateScale = () => {
+      if (!temHabitos) {
+        setSystemScale(1);
+        return;
+      }
+      const maxOrbitDiameter = 260 + (habits.length - 1) * 120;
+      // extra para o planeta não ser cortado (planeta w-16 + posição -top-7)
+      const neededSize = maxOrbitDiameter + 120;
+      const available = Math.min(window.innerWidth, window.innerHeight) * 0.9;
+      setSystemScale(Math.min(1, available / neededSize));
+    };
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
+  }, [habits.length, temHabitos]);
 
   // Loading enquanto busca dados do Firestore
   if (loading) {
@@ -68,7 +88,7 @@ const totalStreak = habits ? habits.reduce((acc, h) => acc + (h.streak || 0), 0)
         <FundoCosmico />
         <div className="z-10 flex flex-col items-center gap-4">
           <div className="w-10 h-10 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
-          <p className="text-gray-400 text-sm tracking-widest uppercase font-light">Carregando sua galáxia...</p>
+          <p className="text-gray-400 text-sm tracking-widest uppercase font-light">Mapeando sua galáxia...</p>
         </div>
       </div>
     );
@@ -97,26 +117,35 @@ const totalStreak = habits ? habits.reduce((acc, h) => acc + (h.streak || 0), 0)
         toggleEdit={() => setIsEditMode(!isEditMode)}
       />
 
-      {/* O Usuário (Centro) */}
-      <EstrelaCentral isEditMode={isEditMode} totalStreak={totalStreak} />
+      {/* Estado vazio — botão central de onboarding */}
+      {!temHabitos && <EstadoVazio onAddHabit={() => setIsModalOpen(true)} />}
 
-      {/* Se não tiver hábitos, mostra mensagem */}
-      {!temHabitos && <EstadoVazio />}
+      {/* Sistema solar escalado proporcionalmente no mobile */}
+      <div
+        className="absolute inset-0 flex items-center justify-center"
+        style={{ transform: `scale(${systemScale})`, transformOrigin: 'center center' }}
+      >
+        {/* O Usuário (Centro) */}
+        <EstrelaCentral isEditMode={isEditMode} maxStreak={maxStreak} />
 
-      {/* Renderiza os Planetas */}
-      {temHabitos && habits.map((habit, index) => (
-        <Planet
-          key={habit.id}
-          habit={habit}
-          index={index}
-          totalHabits={habits.length}
-          isEditMode={isEditMode}
-          onInteract={handleInteraction}
-        />
-      ))}
+        {/* Renderiza os Planetas */}
+        {temHabitos && habits.map((habit, index) => (
+          <Planet
+            key={habit.id}
+            habit={habit}
+            index={index}
+            totalHabits={habits.length}
+            isEditMode={isEditMode}
+            onInteract={handleInteraction}
+          />
+        ))}
+      </div>
 
-      {/* Botão de Ação */}
-      {!isEditMode && (
+      {/* Painel de progresso diário (só quando há hábitos) */}
+      {temHabitos && <PainelDiario habits={habits} />}
+
+      {/* Botão de Ação (só quando há hábitos, fora do estado vazio) */}
+      {temHabitos && !isEditMode && (
         <BotaoNovoHabito onClick={() => setIsModalOpen(true)} />
       )}
 

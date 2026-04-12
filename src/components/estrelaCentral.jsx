@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAuth } from '../hooks/useAuth';
 
-const EstrelaCentral = ({ isEditMode, totalStreak }) => {
+const EstrelaCentral = ({ isEditMode, maxStreak }) => {
   const { user } = useAuth();
   const firstName = user?.displayName?.split(' ')[0] || 'Eu';
 
@@ -103,7 +103,7 @@ const EstrelaCentral = ({ isEditMode, totalStreak }) => {
             animation: isEditMode ? 'none' : 'streak-glow 3s ease-in-out infinite',
           }}
         >
-          Streak Total: {totalStreak}
+          Melhor Streak: {maxStreak}
         </div>
       </div>
     </>
