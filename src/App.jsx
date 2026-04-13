@@ -10,6 +10,7 @@ import Cadastro from './pages/cadastro';
 import Universe from './pages/universe';
 import HabitDetails from './pages/habitDetails';
 import RecuperarSenha from './pages/recuperarSenha';
+import ComoFunciona from './pages/comoFunciona';
  
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/cadastro" element={<Cadastro />} />
           <Route path="/recuperar-senha" element={<RecuperarSenha />} />
+          <Route path="/como-funciona" element={<ComoFunciona />} />
  
           {/* Rotas protegidas */}
           <Route path="/orbita" element={
