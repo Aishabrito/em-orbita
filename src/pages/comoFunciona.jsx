@@ -2,37 +2,42 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Rocket, Globe, Star, ArrowLeft } from 'lucide-react';
 import fundoGalaxia from '../assets/fundogalaxia.png';
+import Footer from '../components/footer'; // Ajuste o caminho se salvou em outra pasta
 
-const FeatureCard = ({ icon: Icon, step, title, description, color }) => (
-  <div className="bg-white/5 border border-white/10 p-8 rounded-2xl backdrop-blur-md hover:bg-white/[0.08] transition-all group">
-    <div 
-      className="w-12 h-12 rounded-lg flex items-center justify-center mb-6 border transition-transform group-hover:scale-110"
-      style={{ backgroundColor: `${color}22`, borderColor: `${color}44` }}
-    >
-      <Icon size={24} color={color} />
+const FeatureCard = ({ icon, step, title, description, color }) => {
+  const IconComponent = icon; 
+
+  return (
+    <div className="bg-white/5 border border-white/10 p-8 rounded-2xl backdrop-blur-md hover:bg-white/[0.08] transition-all group">
+      <div 
+        className="w-12 h-12 rounded-lg flex items-center justify-center mb-6 border transition-transform group-hover:scale-110"
+        style={{ backgroundColor: `${color}22`, borderColor: `${color}44` }}
+      >
+        <IconComponent size={24} color={color} />
+      </div>
+      <span className="text-[10px] font-bold tracking-[0.2em] uppercase mb-2 block font-orbita" style={{ color }}>
+        {step}
+      </span>
+      <h3 className="text-xl font-bold text-white mb-4 uppercase tracking-tight font-titulo">{title}</h3>
+      <p className="text-gray-400 leading-relaxed text-sm font-light tracking-wide font-orbita">
+        {description}
+      </p>
     </div>
-    <span className="text-[10px] font-bold tracking-[0.2em] uppercase mb-2 block font-orbita" style={{ color }}>
-      {step}
-    </span>
-    <h3 className="text-xl font-bold text-white mb-4 uppercase tracking-tight font-titulo">{title}</h3>
-    <p className="text-gray-400 leading-relaxed text-sm font-light tracking-wide font-orbita">
-      {description}
-    </p>
-  </div>
-);
+  );
+};
 
 const ComoFunciona = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="relative min-h-screen bg-[#050505] text-white selection:bg-cyan-500/30 overflow-y-auto overflow-x-hidden">
+    <div className="relative h-screen w-full bg-[#050505] text-white selection:bg-cyan-500/30 overflow-y-auto overflow-x-hidden">
+      
       {/* Background persistente */}
-      <div className="fixed inset-0 bg-cover bg-center opacity-40 z-0"
+      <div className="fixed inset-0 bg-cover bg-center opacity-40 z-0 pointer-events-none"
            style={{ backgroundImage: `url(${fundoGalaxia})` }}></div>
-      <div className="fixed inset-0 bg-black/60 z-0"></div>
+      <div className="fixed inset-0 bg-black/60 z-0 pointer-events-none"></div>
 
-      {/* AQUI FOI AJUSTADO O SCROLL: troquei py-20 por pt-20 pb-40 */}
-      <div className="relative z-10 max-w-6xl mx-auto px-6 pt-20 pb-40">
+      <div className="relative z-10 max-w-6xl mx-auto px-6 pt-20 pb-8">
         
         {/* Voltar */}
         <button 
@@ -78,9 +83,8 @@ const ComoFunciona = () => {
           />
         </div>
 
-        {/* Nova Seção: Métricas e Tech */}
+        {/* Seção: Métricas e Tech */}
         <div className="mt-32 flex flex-col md:flex-row gap-12 items-center">
-          {/* Lado Esquerdo: Texto */}
           <div className="flex-1">
             <span className="text-cyan-400 font-bold tracking-[0.2em] uppercase text-xs mb-4 block font-orbita">
               Telemetria Avançada
@@ -93,7 +97,6 @@ const ComoFunciona = () => {
               Tudo salvo em nuvem com segurança, garantindo que sua galáxia seja única e intransferível.
             </p>
             
-            {/* Badges de Tecnologia (Ouro para recrutadores!) */}
             <div className="flex flex-wrap gap-3 mt-8">
               <span className="px-4 py-2 rounded-full border border-white/10 bg-white/5 text-xs text-gray-300 font-bold tracking-widest uppercase font-orbita">React.js</span>
               <span className="px-4 py-2 rounded-full border border-white/10 bg-white/5 text-xs text-gray-300 font-bold tracking-widest uppercase font-orbita">Firebase</span>
@@ -101,12 +104,10 @@ const ComoFunciona = () => {
             </div>
           </div>
 
-          {/* Lado Direito: Representação visual (Um super card) */}
           <div className="flex-1 w-full bg-gradient-to-br from-white/5 to-transparent border border-white/10 p-8 rounded-3xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
             
             <div className="relative z-10 flex flex-col gap-6">
-              {/* Mockup de um card de status */}
               <div className="bg-black/40 border border-white/5 p-6 rounded-2xl flex justify-between items-center backdrop-blur-md">
                 <div>
                   <div className="text-[10px] text-gray-500 font-bold tracking-[0.2em] uppercase mb-1 font-orbita">Maior Sequência</div>
@@ -115,7 +116,6 @@ const ComoFunciona = () => {
                 <Rocket size={24} className="text-gray-600" />
               </div>
 
-              {/* Mockup de outro card */}
               <div className="bg-black/40 border border-white/5 p-6 rounded-2xl flex justify-between items-center backdrop-blur-md translate-x-8">
                 <div>
                   <div className="text-[10px] text-gray-500 font-bold tracking-[0.2em] uppercase mb-1 font-orbita">Planetas Vivos</div>
@@ -137,6 +137,10 @@ const ComoFunciona = () => {
             Começar a construir
           </button>
         </div>
+
+        {/* FOOTER INSERIDO AQUI */}
+        <Footer />
+        
       </div>
     </div>
   );

@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Rocket } from 'lucide-react'; 
 import fundoGalaxia from '../assets/fundogalaxia.png';
+import Footer from '../components/footer'; // Importando o Footer
 
 const Inicial = () => {
   const navigate = useNavigate();
@@ -15,35 +16,32 @@ const Inicial = () => {
     
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_0%,_#000000_90%)] pointer-events-none"></div>
 
-{/* BOTÕES DO TOPO */}
-<div className="absolute top-10 right-10 z-50 flex items-center gap-4 md:gap-6">
-  
-  {/* Botão COMO FUNCIONA */}
-  <button 
-    onClick={() => navigate('/como-funciona')} 
-    className="px-6 py-2.5 rounded-lg border border-white/10 bg-white/5 backdrop-blur-sm text-gray-400 hover:text-cyan-400 hover:border-cyan-400/40 transition-all duration-300 tracking-widest uppercase text-[10px] md:text-xs font-bold font-orbita"
-  >
-    Como Funciona
-  </button>
+      {/* BOTÕES DO TOPO */}
+      <div className="absolute top-10 right-10 z-50 flex items-center gap-4 md:gap-6">
+        <button 
+          onClick={() => navigate('/como-funciona')} 
+          className="px-6 py-2.5 rounded-lg border border-white/10 bg-white/5 backdrop-blur-sm text-gray-400 hover:text-cyan-400 hover:border-cyan-400/40 transition-all duration-300 tracking-widest uppercase text-[10px] md:text-xs font-bold font-orbita"
+        >
+          Como Funciona
+        </button>
 
-  {/* Botão ENTRAR */}
-  <button 
-    onClick={() => navigate('/login')} 
-    className="px-8 py-2.5 rounded-lg border border-gray-500/50 bg-black/20 backdrop-blur-sm text-gray-200 hover:text-white hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(34,211,238,0.5)] transition-all duration-300 tracking-widest uppercase text-xs md:text-sm font-bold font-orbita"
-  >
-    Entrar
-  </button>
+        <button 
+          onClick={() => navigate('/login')} 
+          className="px-8 py-2.5 rounded-lg border border-gray-500/50 bg-black/20 backdrop-blur-sm text-gray-200 hover:text-white hover:border-cyan-400 hover:shadow-[0_0_15px_rgba(34,211,238,0.5)] transition-all duration-300 tracking-widest uppercase text-xs md:text-sm font-bold font-orbita"
+        >
+          Entrar
+        </button>
 
-  {/* Botão CADASTRE-SE */}
-  <button 
-      onClick={() => navigate('/cadastro')} 
-      className="group relative px-8 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 text-white shadow-[0_0_20px_rgba(34,211,238,0.4)] hover:shadow-[0_0_35px_rgba(147,51,234,0.6)] hover:scale-105 transition-all duration-300"
-  >
-      <span className="relative z-10 flex items-center gap-2 tracking-widest uppercase text-xs md:text-sm font-bold font-orbita">
-        Cadastre-se <Rocket size={16} className="text-white fill-white" />
-      </span>
-  </button>
-</div>
+        <button 
+            onClick={() => navigate('/cadastro')} 
+            className="group relative px-8 py-2.5 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 text-white shadow-[0_0_20px_rgba(34,211,238,0.4)] hover:shadow-[0_0_35px_rgba(147,51,234,0.6)] hover:scale-105 transition-all duration-300"
+        >
+            <span className="relative z-10 flex items-center gap-2 tracking-widest uppercase text-xs md:text-sm font-bold font-orbita">
+              Cadastre-se <Rocket size={16} className="text-white fill-white" />
+            </span>
+        </button>
+      </div>
+      
       <main className="absolute top-1/2 left-16 md:left-24 -translate-y-1/2 max-w-4xl z-10 pr-4">
         
         {/* Logo  "EM ÓRBITA" */}
@@ -67,6 +65,11 @@ const Inicial = () => {
         </p>
 
       </main>
+
+      {/* FOOTER FIXADO NA BASE - Ocultando a margem superior padrão dele */}
+      <div className="absolute bottom-0 w-full px-6 md:px-16 z-20 [&>footer]:mt-0 [&>footer]:py-6">
+        <Footer />
+      </div>
 
     </div>
   );
